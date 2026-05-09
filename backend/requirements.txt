@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+openpyxl
+python-multipart
+ipykernel
+ipywidgets
+plotly
+folium
+nbformat
+global-land-mask
