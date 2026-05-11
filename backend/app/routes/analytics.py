@@ -39,3 +39,19 @@ def read_districts(df=Depends(get_df)):
 @router.get("/points")
 def read_points(df=Depends(get_df)):
     return clustering.get_heatmap_data(df)
+
+@router.get("/blackspots")
+def read_blackspots(df=Depends(get_df)):
+    return clustering.identify_blackspots(df)
+
+@router.get("/road-classification")
+def read_road_class(df=Depends(get_df)):
+    return analytics.get_road_classification(df)
+
+@router.get("/collision-types")
+def read_collision_types(df=Depends(get_df)):
+    return analytics.get_collision_types(df)
+
+@router.get("/weather")
+def read_weather(df=Depends(get_df)):
+    return analytics.get_weather_conditions(df)

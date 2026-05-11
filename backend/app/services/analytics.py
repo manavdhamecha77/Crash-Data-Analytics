@@ -30,3 +30,24 @@ def get_hourly_trend(df):
     trend = all_hours.merge(trend, on='Hour', how='left').fillna(0)
     trend['hour'] = trend['Hour'].apply(lambda x: f"{int(x):02d}:00")
     return trend[['hour', 'count']].to_dict(orient='records')
+
+def get_road_classification(df):
+    if 'Road_Classification' not in df.columns:
+        return []
+    counts = df['Road_Classification'].value_counts().reset_index()
+    counts.columns = ['type', 'count']
+    return counts.to_dict(orient='records')
+
+def get_collision_types(df):
+    if 'Collision_Type' not in df.columns:
+        return []
+    counts = df['Collision_Type'].value_counts().reset_index()
+    counts.columns = ['type', 'count']
+    return counts.to_dict(orient='records')
+
+def get_weather_conditions(df):
+    if 'Weather_Condition' not in df.columns:
+        return []
+    counts = df['Weather_Condition'].value_counts().reset_index()
+    counts.columns = ['condition', 'count']
+    return counts.to_dict(orient='records')

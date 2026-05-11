@@ -1,26 +1,29 @@
 import React from 'react';
 import { LayoutDashboard, Map, BarChart3, AlertTriangle, Settings, FileText } from 'lucide-react';
 
-const SidebarItem = ({ icon: Icon, label, active = false }) => (
-  <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    padding: '10px 16px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    color: active ? 'var(--primary)' : 'var(--ink-2)',
-    background: active ? 'var(--primary-soft)' : 'transparent',
-    fontSize: '14px',
-    fontWeight: active ? 500 : 400,
-    transition: 'all 0.2s'
-  }}>
+const SidebarItem = ({ icon: Icon, label, active = false, onClick }) => (
+  <div 
+    onClick={onClick}
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      padding: '10px 16px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      color: active ? 'var(--primary)' : 'var(--ink-2)',
+      background: active ? 'var(--primary-soft)' : 'transparent',
+      fontSize: '14px',
+      fontWeight: active ? 500 : 400,
+      transition: 'all 0.2s'
+    }}
+  >
     <Icon size={18} />
     <span>{label}</span>
   </div>
 );
 
-const Sidebar = () => {
+const Sidebar = ({ activeTab, setActiveTab }) => {
   return (
     <aside style={{
       width: '240px',
@@ -36,10 +39,30 @@ const Sidebar = () => {
       top: '73px'
     }}>
       <div className="label-micro" style={{ padding: '0 16px 8px' }}>Main Menu</div>
-      <SidebarItem icon={LayoutDashboard} label="Dashboard" active />
-      <SidebarItem icon={Map} label="Spatial Analysis" />
-      <SidebarItem icon={BarChart3} label="Analytics" />
-      <SidebarItem icon={AlertTriangle} label="Blackspots" />
+      <SidebarItem 
+        icon={LayoutDashboard} 
+        label="Dashboard" 
+        active={activeTab === 'Dashboard'} 
+        onClick={() => setActiveTab('Dashboard')}
+      />
+      <SidebarItem 
+        icon={Map} 
+        label="Spatial Analysis" 
+        active={activeTab === 'Spatial Analysis'} 
+        onClick={() => setActiveTab('Spatial Analysis')}
+      />
+      <SidebarItem 
+        icon={BarChart3} 
+        label="Analytics" 
+        active={activeTab === 'Analytics'} 
+        onClick={() => setActiveTab('Analytics')}
+      />
+      <SidebarItem 
+        icon={AlertTriangle} 
+        label="Blackspots" 
+        active={activeTab === 'Blackspots'} 
+        onClick={() => setActiveTab('Blackspots')}
+      />
       
       <div className="label-micro" style={{ padding: '24px 16px 8px' }}>Support</div>
       <SidebarItem icon={FileText} label="Documentation" />
