@@ -51,3 +51,11 @@ def get_weather_conditions(df):
     counts = df['Weather_Condition'].value_counts().reset_index()
     counts.columns = ['condition', 'count']
     return counts.to_dict(orient='records')
+
+def get_traffic_violations(df):
+    if 'Traffic_Violation' not in df.columns:
+        return []
+    counts = df['Traffic_Violation'].value_counts().reset_index()
+    counts.columns = ['violation', 'count']
+    # Filter out 'Unknown' if it's too dominant, or keep it based on preference
+    return counts.to_dict(orient='records')

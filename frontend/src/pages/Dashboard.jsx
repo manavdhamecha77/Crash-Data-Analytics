@@ -3,15 +3,13 @@ import KPICards from '../components/KPICards';
 import SeverityChart from '../components/SeverityChart';
 import HourlyTrend from '../components/HourlyTrend';
 import DistrictChart from '../components/DistrictChart';
-import HeatmapMap from '../components/HeatmapMap';
-import { getSummary, getSeverity, getHourlyTrend, getDistricts } from '../services/api';
+import { getSummary, getSeverity, getHourlyTrend } from '../services/api';
 
 const Dashboard = () => {
   const [data, setData] = useState({
     summary: null,
     severity: [],
     hourly: [],
-    districts: [],
     loading: true,
     error: null
   });
@@ -19,18 +17,16 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [summaryRes, severityRes, hourlyRes, districtsRes] = await Promise.all([
+        const [summaryRes, severityRes, hourlyRes] = await Promise.all([
           getSummary(),
           getSeverity(),
-          getHourlyTrend(),
-          getDistricts()
+          getHourlyTrend()
         ]);
 
         setData({
           summary: summaryRes.data,
           severity: severityRes.data,
           hourly: hourlyRes.data,
-          districts: districtsRes.data,
           loading: false,
           error: null
         });
@@ -80,10 +76,8 @@ const Dashboard = () => {
         gridTemplateColumns: '1fr',
         gap: '24px'
       }}>
-        <DistrictChart data={data.districts} />
+        <DistrictChart />
       </div>
-
-      <HeatmapMap />
     </div>
   );
 };

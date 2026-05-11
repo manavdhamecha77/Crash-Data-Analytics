@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Map, BarChart3, AlertTriangle, Settings, FileText } from 'lucide-react';
+import { LayoutDashboard, Map, BarChart3, AlertTriangle } from 'lucide-react';
 
 const SidebarItem = ({ icon: Icon, label, active = false, onClick }) => (
   <div 
@@ -63,10 +63,6 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         active={activeTab === 'Blackspots'} 
         onClick={() => setActiveTab('Blackspots')}
       />
-      
-      <div className="label-micro" style={{ padding: '24px 16px 8px' }}>Support</div>
-      <SidebarItem icon={FileText} label="Documentation" />
-      <SidebarItem icon={Settings} label="Settings" />
 
       <div style={{ marginTop: 'auto', padding: '16px' }}>
         <div className="card" style={{ background: 'var(--cream)', padding: '12px' }}>

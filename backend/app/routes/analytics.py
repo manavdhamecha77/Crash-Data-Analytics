@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
+from typing import Optional
 from app.services.loader import load_dataset
 from app.services.preprocess import clean_data
 from app.services import analytics
@@ -29,10 +30,16 @@ def read_hourly(df=Depends(get_df)):
     return analytics.get_hourly_trend(df)
 
 @router.get("/districts")
-def read_districts(df=Depends(get_df)):
+def read_districts(limit: Optional[int] = Query(5), df=Depends(get_df)):
     if 'District' not in df.columns:
         return []
-    dist = df['District'].value_counts().head(5).reset_index()
+    
+    counts = df['District'].value_counts()
+    if limit and limit > 0:
+        dist = counts.head(limit).reset_index()
+    else:
+        dist = counts.reset_index()
+        
     dist.columns = ['district', 'count']
     return dist.to_dict(orient='records')
 
@@ -55,3 +62,7 @@ def read_collision_types(df=Depends(get_df)):
 @router.get("/weather")
 def read_weather(df=Depends(get_df)):
     return analytics.get_weather_conditions(df)
+
+@router.get("/traffic-violations")
+def read_traffic_violations(df=Depends(get_df)):
+    return analytics.get_traffic_violations(df)

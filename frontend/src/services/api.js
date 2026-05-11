@@ -9,11 +9,12 @@ const api = axios.create({
 export const getSummary = () => api.get('/summary');
 export const getSeverity = () => api.get('/severity');
 export const getHourlyTrend = () => api.get('/hourly');
-export const getDistricts = () => api.get('/districts');
+export const getDistricts = (limit = 5) => api.get('/districts', { params: { limit } });
 export const getPoints = () => api.get('/points');
 export const getBlackspots = () => api.get('/blackspots');
 export const getRoadClass = () => api.get('/road-classification');
 export const getCollisionTypes = () => api.get('/collision-types');
 export const getWeather = () => api.get('/weather');
+export const getTrafficViolations = () => api.get('/traffic-violations');
 
 export default api;

@@ -1,13 +1,36 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { getBlackspots } from '../services/api';
 
 const BlackspotTable = () => {
-  const blackspots = [
-    { id: 1, location: 'SG Highway, Ahmedabad', accidents: 45, fatalities: 12, score: 8.5 },
-    { id: 2, location: 'Ring Road, Surat', accidents: 38, fatalities: 8, score: 7.2 },
-    { id: 3, location: 'Kalupur Circle, Ahmedabad', accidents: 32, fatalities: 5, score: 6.8 },
-    { id: 4, location: 'Sayajigunj, Vadodara', accidents: 28, fatalities: 4, score: 6.2 },
-    { id: 5, location: 'Rajkot Bypass', accidents: 25, fatalities: 6, score: 5.9 },
-  ];
+  const [blackspots, setBlackspots] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlackspots = async () => {
+      try {
+        const res = await getBlackspots();
+        setBlackspots(res.data);
+      } catch (err) {
+        console.error("Error fetching blackspots:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlackspots();
+  }, []);
+
+  if (loading) {
+    return <div style={{ padding: '20px', color: 'var(--ink-3)' }}>Analyzing blackspots...</div>;
+  }
+
+  if (blackspots.length === 0) {
+    return (
+      <div className="card">
+        <h3 className="label-micro" style={{ marginBottom: '16px' }}>Identified Blackspots</h3>
+        <p style={{ padding: '20px', textAlign: 'center', color: 'var(--ink-3)' }}>No significant blackspot clusters identified with current parameters.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="card">
@@ -29,13 +52,13 @@ const BlackspotTable = () => {
               <td style={{ padding: '12px 8px', color: 'var(--ink-2)' }}>{spot.fatalities}</td>
               <td style={{ padding: '12px 8px' }}>
                 <span style={{
-                  background: spot.score > 8 ? 'var(--critical-bg)' : 'var(--primary-soft)',
-                  color: spot.score > 8 ? 'var(--critical-text)' : 'var(--primary)',
+                  background: spot.score > 3 ? 'var(--critical-bg)' : 'var(--primary-soft)',
+                  color: spot.score > 3 ? 'var(--critical-text)' : 'var(--primary)',
                   padding: '2px 8px',
                   borderRadius: '12px',
                   fontSize: '12px',
                   fontWeight: 500,
-                  border: `1px solid ${spot.score > 8 ? 'var(--critical-border)' : 'var(--primary-mid)'}`
+                  border: `1px solid ${spot.score > 3 ? 'var(--critical-border)' : 'var(--primary-mid)'}`
                 }}>
                   {spot.score}
                 </span>

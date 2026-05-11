@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend 
 } from 'recharts';
-import { getRoadClass, getCollisionTypes, getWeather } from '../services/api';
+import { getRoadClass, getCollisionTypes, getWeather, getTrafficViolations } from '../services/api';
 
-const COLORS = ['#E54B4B', '#2D3047', '#419D78', '#FFB140', '#9381FF', '#5BC0EB'];
+const COLORS = ['#E54B4B', '#2D3047', '#419D78', '#FFB140', '#9381FF', '#5BC0EB', '#F26419', '#861657'];
 
-const ChartCard = ({ title, children }) => (
-  <div className="card" style={{ padding: '24px', height: '400px', display: 'flex', flexDirection: 'column' }}>
+const ChartCard = ({ title, children, height = '400px' }) => (
+  <div className="card" style={{ padding: '24px', height: height, display: 'flex', flexDirection: 'column' }}>
     <h3 className="label-micro" style={{ marginBottom: '20px' }}>{title}</h3>
     <div style={{ flex: 1, width: '100%' }}>
       {children}
@@ -20,21 +20,24 @@ const Analytics = () => {
     roadClass: [],
     collisionTypes: [],
     weather: [],
+    trafficViolations: [],
     loading: true
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [roadRes, collisionRes, weatherRes] = await Promise.all([
+        const [roadRes, collisionRes, weatherRes, trafficRes] = await Promise.all([
           getRoadClass(),
           getCollisionTypes(),
-          getWeather()
+          getWeather(),
+          getTrafficViolations()
         ]);
         setData({
           roadClass: roadRes.data,
           collisionTypes: collisionRes.data,
           weather: weatherRes.data,
+          trafficViolations: trafficRes.data,
           loading: false
         });
       } catch (err) {
@@ -57,7 +60,7 @@ const Analytics = () => {
     <div style={{ marginLeft: '240px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
       <header>
         <h2 style={{ fontSize: '24px', color: 'var(--ink)' }}>Advanced Analytics</h2>
-        <p style={{ fontSize: '14px', color: 'var(--ink-2)' }}>Detailed breakdown of road infrastructure and environmental factors.</p>
+        <p style={{ fontSize: '14px', color: 'var(--ink-2)' }}>Detailed breakdown of road infrastructure, environment, and behavioral factors.</p>
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
@@ -95,17 +98,31 @@ const Analytics = () => {
         </ChartCard>
       </div>
 
-      <ChartCard title="Collision Type Breakdown">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data.collisionTypes}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--rule)" />
-            <XAxis dataKey="type" tick={{ fontSize: 10, fill: 'var(--ink-2)' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 12, fill: 'var(--ink-2)' }} axisLine={false} tickLine={false} />
-            <Tooltip />
-            <Bar dataKey="count" fill="var(--secondary)" radius={[4, 4, 0, 0]} barSize={40} />
-          </BarChart>
-        </ResponsiveContainer>
-      </ChartCard>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <ChartCard title="Collision Type Breakdown">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data.collisionTypes}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--rule)" />
+              <XAxis dataKey="type" tick={{ fontSize: 10, fill: 'var(--ink-2)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 12, fill: 'var(--ink-2)' }} axisLine={false} tickLine={false} />
+              <Tooltip />
+              <Bar dataKey="count" fill="var(--secondary)" radius={[4, 4, 0, 0]} barSize={40} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+
+        <ChartCard title="Traffic Violation Analysis">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data.trafficViolations} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--rule)" />
+              <XAxis type="number" hide />
+              <YAxis dataKey="violation" type="category" width={140} tick={{ fontSize: 10, fill: 'var(--ink-2)' }} axisLine={false} tickLine={false} />
+              <Tooltip cursor={{ fill: 'var(--primary-soft)' }} />
+              <Bar dataKey="count" fill="var(--critical-text)" radius={[0, 4, 4, 0]} barSize={16} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      </div>
     </div>
   );
 };
