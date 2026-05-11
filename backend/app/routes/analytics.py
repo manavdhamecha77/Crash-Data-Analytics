@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from app.services.loader import load_dataset
 from app.services.preprocess import clean_data
 from app.services import analytics
+from app.services import clustering
 
 router = APIRouter()
 
@@ -34,3 +35,7 @@ def read_districts(df=Depends(get_df)):
     dist = df['District'].value_counts().head(5).reset_index()
     dist.columns = ['district', 'count']
     return dist.to_dict(orient='records')
+
+@router.get("/points")
+def read_points(df=Depends(get_df)):
+    return clustering.get_heatmap_data(df)

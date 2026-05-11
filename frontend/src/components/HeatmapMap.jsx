@@ -1,40 +1,51 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-
-// Fix for default marker icon in Leaflet
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-let DefaultIcon = L.icon({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
+import { getPoints } from '../services/api';
 
 const HeatmapMap = () => {
-  const position = [23.0225, 72.5714]; // Ahmedabad coordinates
+  const [points, setPoints] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const position = [22.4, 71.2]; // Centered on Gujarat region
+
+  useEffect(() => {
+    const fetchPoints = async () => {
+      try {
+        const res = await getPoints();
+        setPoints(res.data);
+      } catch (err) {
+        console.error("Error fetching map points:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPoints();
+  }, []);
 
   return (
-    <div className="card" style={{ height: '450px', display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0 }}>
-      <div style={{ padding: '16px' }}>
+    <div className="card" style={{ height: '550px', display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0 }}>
+      <div style={{ padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h3 className="label-micro">Accident Spatial Distribution</h3>
+        {loading && <span style={{ fontSize: '12px', color: 'var(--ink-3)' }}>Loading points...</span>}
       </div>
       <div style={{ flex: 1, position: 'relative' }}>
-        <MapContainer center={position} zoom={13} style={{ height: '100%', width: '100%' }}>
+        <MapContainer center={position} zoom={7} style={{ height: '100%', width: '100%' }}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Marker position={position}>
-            <Popup>
-              Ahmedabad City Center <br /> 42 Accidents this week.
-            </Popup>
-          </Marker>
+          {points.map((point, idx) => (
+            <CircleMarker
+              key={idx}
+              center={[point.lat, point.lng]}
+              radius={2}
+              pathOptions={{ color: '#E54B4B', fillColor: '#E54B4B', fillOpacity: 0.6 }}
+            >
+              <Popup>
+                Accident Location <br /> Lat: {point.lat.toFixed(4)}, Lng: {point.lng.toFixed(4)}
+              </Popup>
+            </CircleMarker>
+          ))}
         </MapContainer>
       </div>
     </div>

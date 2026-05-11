@@ -10,5 +10,6 @@ export const getSummary = () => api.get('/summary');
 export const getSeverity = () => api.get('/severity');
 export const getHourlyTrend = () => api.get('/hourly');
 export const getDistricts = () => api.get('/districts');
+export const getPoints = () => api.get('/points');
 
 export default api;

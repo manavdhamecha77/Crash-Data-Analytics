@@ -3,9 +3,7 @@ import KPICards from '../components/KPICards';
 import SeverityChart from '../components/SeverityChart';
 import HourlyTrend from '../components/HourlyTrend';
 import DistrictChart from '../components/DistrictChart';
-import WeatherChart from '../components/WeatherChart';
 import HeatmapMap from '../components/HeatmapMap';
-import BlackspotTable from '../components/BlackspotTable';
 import { getSummary, getSeverity, getHourlyTrend, getDistricts } from '../services/api';
 
 const Dashboard = () => {
@@ -79,16 +77,13 @@ const Dashboard = () => {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: '1fr',
         gap: '24px'
       }}>
         <DistrictChart data={data.districts} />
-        <WeatherChart /> {/* Weather endpoint can be added later */}
       </div>
 
       <HeatmapMap />
-
-      <BlackspotTable />
     </div>
   );
 };
