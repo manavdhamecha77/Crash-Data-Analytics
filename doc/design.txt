@@ -1,0 +1,137 @@
+Design language
+Aesthetic direction: warm editorial minimalism. Think a financial terminal crossed with a
+high-end print publication. Calm, authoritative, uncluttered.
+The one rule to remember: let whitespace do the work. Fewer elements, more breathing room,
+higher trust.
+
+Color palette
+Use only these values. Never introduce new colors outside this set.
+TokenHexUsage--cream#faf8f5Page background--paper#ffffffCard / surface background--orange#e8692aPrimary accent — CTAs, active states, filled bars--orange-soft#f5e6dcWarning banner bg, badge bg, hover tint--orange-mid#f0c4a8Warning banner border, badge border--ink#1a1612Headings, primary text--ink-2#6b6560Body text, descriptions, secondary labels--ink-3#b5b0abTertiary labels, timestamps, units, empty states--rulergba(26,22,18,0.08)All borders and dividers#22c55e—Status green — "normal", "stable", success bars#dc2626—Status red — "critical" severity only#1d4ed8 / #eff6ff / #bfdbfe—Medium severity pill (text / bg / border)
+Severity pill colors (the only place multiple colors are used together):
+
+Critical → bg:#fef2f2 text:#991b1b border:#fecaca
+High → bg:var(--orange-soft) text:#7a3615 border:var(--orange-mid)
+Medium → bg:#eff6ff text:#1d4ed8 border:#bfdbfe
+
+
+Typography
+Font pairing (import via Google Fonts):
+css@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap');
+RoleFontSizeWeightNotesPage titleInstrument Serif28 px400letter-spacing: -0.02emSection headingInstrument Serif20 px400letter-spacing: -0.02emKPI valueInstrument Serif24 px400letter-spacing: -0.02emOps card valueInstrument Serif20 px400—Body / labelsGeist14 px400—Small labelsGeist12 px400—Micro labelsGeist11 px400timestamps, units, section titlesSection titlesGeist11 px400letter-spacing: 0.08em; text-transform: uppercase
+Never use font-weight 600 or 700 in page content. 500 is the maximum bold for Geist labels.
+
+Layout rules
+Page wrapper
+Every page (page.js) renders its own content with no surrounding shell — the shell is in
+layout.js. Use:
+jsx<div style={{ display:'flex', flexDirection:'column', gap:'28px', maxWidth:'860px', margin:'0 auto' }}>
+The layout already adds paddingTop: 96px, side padding, and centers the max-w-5xl container.
+Standard page structure (top to bottom)
+
+Topbar row — page title (left) + live chip + clock + primary CTA button (right)
+Warning banner (conditional, only when there's an active alert)
+KPI row — 4 metric cards in a CSS grid
+Two-column content — grid-template-columns: 1fr 280px — main content left, sidebar right
+Agent log / secondary content — below the two-col if needed
+
+KPI cards
+grid-template-columns: repeat(4, 1fr); gap: 12px
+Each card: background: white; border: 1px solid var(--rule); border-radius: 10px; padding: 16px
+Contents (top to bottom):
+
+Label — 11 px, var(--ink-3)
+Value — Instrument Serif 24 px, var(--ink)
+2 px bar track → filled bar (2 px, accent color)
+Delta line — 11 px, var(--ink-3)
+
+Right sidebar cards
+background: white; border: 1px solid var(--rule); border-radius: 11px; padding: 16px
+Section title inside: 11px, letter-spacing: 0.08em, text-transform: uppercase, color: var(--ink-3)
+Ops grid (2×2 inside a right sidebar card)
+display: grid; grid-template-columns: 1fr 1fr; gap: 8px
+Each cell: background: var(--cream); border: 1px solid var(--rule); border-radius: 7px; padding: 10px 12px
+Value: Instrument Serif 20 px. Label: 10 px, var(--ink-3).
+
+Component patterns
+Warning banner
+jsx<div style={{ background:'var(--orange-soft)', border:'1px solid var(--orange-mid)',
+  borderRadius:'10px', padding:'11px 16px', display:'flex', alignItems:'flex-start', gap:'10px' }}>
+  {/* SVG warning icon, 15×15, stroke var(--orange) */}
+  <p style={{ fontSize:'13px', color:'#7a3615', lineHeight:1.5 }}>
+    Message here.
+  </p>
+</div>
+Proposal / action card
+Structure (inside a white card with border-radius: 11px):
+
+Card body (padding: 16px 18px):
+
+Top row: title (14 px, weight 500) + severity pill (right)
+Description (12 px, var(--ink-2), line-height: 1.6)
+Meta tags row: time, zone, ID — each 11px, var(--ink-3), background: var(--cream), border: 1px solid var(--rule), border-radius: 5px, padding: 2px 8px
+Confidence row: label (11 px, 66 px wide) + 2 px track + fill (orange) + percentage (right)
+
+
+Action bar (border-top: 1px solid var(--rule)):
+
+Three equal-flex buttons: Accept / Override / Reject
+Default: font-size: 12px, color: var(--ink-2), background: none
+Hover states: Accept → green tint, Override → orange tint, Reject → red tint
+
+
+
+Badge / pending count
+background: var(--orange-soft);
+color: #7a3615;
+border: 1px solid var(--orange-mid);
+font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500
+Filter tabs
+background: none; border: 1px solid var(--rule); border-radius: 6px;
+font-size: 11px; color: var(--ink-3); padding: 4px 10px
+Active: background: var(--ink); color: white; border-color: var(--ink)
+Zone status row
+display: flex; justify-content: space-between; align-items: center;
+padding: 7px 10px; background: var(--cream); border: 1px solid var(--rule); border-radius: 7px
+Right side: 6 px circle dot — green (#22c55e) = normal, orange = warning, red = critical.
+Agent log row
+display: flex; align-items: flex-start; gap: 8px; padding: 8px 0;
+border-bottom: 1px solid var(--rule)
+
+Time: 10 px, var(--ink-3), 44 px wide, tabular-nums
+Dot: 5 px circle — ok=green, warn=orange, crit=red, info=#94a3b8
+Message: 11 px, var(--ink-2), line-height: 1.5
+
+Live chip
+display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2);
+background: white; border: 1px solid var(--rule); border-radius: 20px; padding: 5px 11px
+Dot: 6 px, #22c55e, animated pulse (opacity 1 → 0.4 → 1, 2s ease-in-out infinite).
+Primary CTA button
+background: var(--orange); color: white; border: none; border-radius: 7px;
+padding: 8px 15px; font-size: 12px; font-weight: 500
+Hover: opacity: 0.88
+Modal
+Overlay: background: rgba(26,22,18,0.4), centered flex.
+Modal panel: background: white; border-radius: 13px; border: 1px solid var(--rule); width: 390px
+
+Header: padding: 15px 20px; border-bottom: 1px solid var(--rule)
+Body: padding: 18px 20px
+Footer: padding: 12px 20px; border-top: 1px solid var(--rule); justify-content: flex-end
+
+Form fields inside modal:
+
+Label: 11 px, var(--ink-2)
+Input/textarea: background: var(--cream); border: 1px solid var(--rule); border-radius: 7px; padding: 9px 12px; font-size: 13px
+Focus: border-color: var(--orange)
+
+
+What NOT to do
+
+No dark backgrounds, no neon glows, no heavy drop shadows
+No more than two accent colors visible on screen at once
+No emoji in UI (use inline SVG icons instead)
+No font-weight above 500 in body content
+No ALL CAPS except section titles (11 px, tracked, muted)
+No sidebar, topnav, or branding in page files — the layout handles all of that
+No spacing tighter than 6 px between interactive elements
+Never use position: fixed inside page content (breaks Next.js layout scroll)
+

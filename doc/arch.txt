@@ -1,0 +1,248 @@
+A2 Crash Analytics Dashboard
+Complete Build Roadmap
+Goal: Build a:
+clean desktop-first analytics dashboard
+using:
+React frontend
+FastAPI backend
+Leaflet maps
+Recharts
+NO deployment focus. NO database. NO overengineering.
+FINAL SYSTEM ARCHITECTURE
+Plain text
+Frontend (React)
+↓ API Calls
+Backend (FastAPI)
+↓
+Processed Pandas DataFrame
+↓
+Excel Dataset
+CORE PRINCIPLE
+Backend owns:
+dataset
+preprocessing
+analytics
+clustering
+Frontend owns:
+charts
+layout
+filters
+maps
+interactions
+PHASE 1 — Backend Refactor
+FIRST PRIORITY.
+Before frontend.
+Final Backend Structure
+Plain text
+backend/
+│
+├── app/
+│   ├── main.py
+│   │
+│   ├── routes/
+│   │   └── analytics.py
+│   │
+│   ├── services/
+│   │   ├── loader.py
+│   │   ├── preprocess.py
+│   │   ├── analytics.py
+│   │   └── clustering.py
+│   │
+│   └── datasets/
+│       └── accidents.xlsx
+│
+├── outputs/
+│
+└── requirements.txt
+PHASE 2 — Dataset Loading
+Goal
+Load dataset:
+ONCE at startup.
+Very important.
+loader.py
+Responsibilities:
+load Excel
+return dataframe
+preprocess.py
+Responsibilities:
+clean missing values
+datetime conversion
+feature engineering
+coordinate validation
+analytics.py
+Responsibilities:
+summary metrics
+chart aggregations
+clustering.py
+Responsibilities:
+DBSCAN
+heatmap points
+blackspot summaries
+PHASE 3 — Backend APIs
+Required APIs ONLY
+1. /summary
+Returns:
+total accidents
+fatal accidents
+peak district
+peak hour
+Used for:
+KPI cards
+2. /severity
+Returns:
+JSON
+[
+  {
+    "severity": "Fatal",
+    "count": 200
+  }
+]
+Used for:
+severity chart
+3. /districts
+Top districts.
+4. /hourly
+Hourly trend.
+5. /weather
+Weather distribution.
+6. /heatmap-points
+Returns:
+JSON
+[
+  {
+    "lat": 23.1,
+    "lng": 72.5,
+    "weight": 5
+  }
+]
+Used for:
+Leaflet heatmap
+7. /blackspots
+Returns:
+cluster summaries
+severity scores
+Used for:
+blackspot table + markers
+PHASE 4 — Verify Backend Completely
+Before frontend:
+ALL APIs must work.
+Test:
+Plain text
+localhost:8000/docs
+EVERY route.
+PHASE 5 — Frontend Setup
+Final Frontend Stack
+Plain text
+React + Vite
+Tailwind CSS
+Axios
+Recharts
+React Leaflet
+Install
+Bash
+npm install axios recharts react-leaflet leaflet
+Tailwind
+Use for:
+spacing
+layout
+cards
+responsiveness
+NOT heavy animations.
+PHASE 6 — Frontend Structure
+Plain text
+frontend/
+│
+├── src/
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Sidebar.jsx
+│   │   ├── KPICards.jsx
+│   │   ├── SeverityChart.jsx
+│   │   ├── HourlyTrend.jsx
+│   │   ├── DistrictChart.jsx
+│   │   ├── WeatherChart.jsx
+│   │   ├── HeatmapMap.jsx
+│   │   └── BlackspotTable.jsx
+│   │
+│   ├── pages/
+│   │   └── Dashboard.jsx
+│   │
+│   ├── services/
+│   │   └── api.js
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+PHASE 7 — Layout First
+DO NOT start with charts.
+First build:
+page skeleton
+Build:
+✅ navbar
+✅ sidebar
+✅ grid layout
+✅ card containers
+✅ map container
+WITHOUT real data initially.
+FINAL DASHBOARD LAYOUT
+Plain text
+---------------------------------------------------------
+| Navbar                                                 |
+---------------------------------------------------------
+| Sidebar | KPI Cards                                   |
+|         |---------------------------------------------|
+|         | Severity Chart | Hourly Trend               |
+|         |---------------------------------------------|
+|         | District Chart | Weather Analysis           |
+|         |---------------------------------------------|
+|         |                                             |
+|         |        Leaflet Heatmap Map                  |
+|         |                                             |
+|         |---------------------------------------------|
+|         | Blackspot Table                             |
+---------------------------------------------------------
+PHASE 8 — KPI Cards
+Connect:
+Plain text
+/summary
+Display:
+total accidents
+fatalities
+peak district
+peak hour
+Simple clean cards.
+PHASE 9 — Charts
+Use:
+Recharts
+Recommended Charts
+Component
+Chart
+Severity
+Bar
+Hourly
+Line
+District
+Horizontal Bar
+Weather
+Pie/Donut
+PHASE 10 — Leaflet Map
+MOST IMPORTANT VISUAL.
+Map Features
+Accident Heatmap
+Cluster Markers
+Popup:
+cluster ID
+accident count
+severity score
+Recommended Libraries
+Bash
+npm install react-leaflet leaflet
+Optional:
+Bash
+npm install react-leaflet-heatmap-layer-v3
+PHASE 11 — Blackspot Table
+Simple table.
+Columns:
+cluster
+accidents
+fatalities
+severity score

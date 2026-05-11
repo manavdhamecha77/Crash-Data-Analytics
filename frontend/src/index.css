@@ -1,0 +1,76 @@
+:root {
+  --cream: #faf8f5;
+  --paper: #ffffff;
+  --primary: #22c55e;
+  --primary-soft: #f0fdf4;
+  --primary-mid: #bbf7d0;
+  --ink: #1a1612;
+  --ink-2: #6b6560;
+  --ink-3: #b5b0ab;
+  --rule: rgba(26,22,18,0.08);
+  --critical-bg: #fef2f2;
+  --critical-text: #991b1b;
+  --critical-border: #fecaca;
+  --medium-bg: #eff6ff;
+  --medium-text: #1d4ed8;
+  --medium-border: #bfdbfe;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Geist', sans-serif;
+  background-color: var(--cream);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, .serif {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+}
+
+.label-micro {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 11px;
+  padding: 16px;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.88;
+}
+
+/* Leaflet styles */
+.leaflet-container {
+  height: 400px;
+  width: 100%;
+  border-radius: 11px;
+  z-index: 1;
+}
